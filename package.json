@@ -11,9 +11,11 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "watch": "tsc -b && vite build --watch"
   },
   "dependencies": {
+    "antd": "4.23.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
