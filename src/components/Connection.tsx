@@ -14,12 +14,7 @@ const Connection: React.FC<ConnectionProps> = ({ size, ...props }) => {
     large: "100%",
   };
   return (
-    <Modal
-      width={sizeMap[size]}
-      maskClosable={false}
-      {...props}
-      title="RTR testing"
-    >
+    <Modal width={sizeMap[size]} maskClosable={false} {...props}>
       <img src={Connecting} alt="Connecting" width={510} />
     </Modal>
   );
