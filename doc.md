@@ -1,18 +1,33 @@
 ## 1. 子项目操作：
 
-### 1.1 子项目构建：
+### 1.1 子项目准备：
+
+执行 copy-to-deploy.sh 脚本。例：把当前目录下除了 node_modules .git 之外的文件 copy 到 ../meeting-deploy 目录下面。
 
 ```bash
-## 开发环境构建
-npm run watch  // tsc -b && vite build --watch
-or yarn watch
+#!/bin/bash
+# 目标目录
+TARGET_DIR="../meeting-deploy"
 
-## 生产环境构建
-npm run build
-or yarn build
+# 创建目标目录
+mkdir -p "$TARGET_DIR"
+
+# 复制文件，排除指定目录
+rsync -av --progress \
+  --exclude='node_modules' \
+  --exclude='.git' \
+  --exclude='.gitignore' \
+  --exclude='.vscode' \
+  --exclude='.idea' \
+  --exclude='dist' \
+  --exclude='*.log' \
+  --exclude='*.tmp' \
+  ./ "$TARGET_DIR"
+
+echo "Files copied to $TARGET_DIR"
 ```
 
-### 1.2 在子项目目录下创建本地链接：
+### 1.2 在 deploy 子项目目录下创建本地链接：
 
 ```bash
 npm link
@@ -29,7 +44,7 @@ npm link meeting  // meeting 是子项目的名称
 ### 2.2 主项目安装子项目依赖：
 
 ```bash
-yarn add file:../meeting@0.0.1
+yarn add file:../meeting-deploy
 ```
 
 ### 2.3 主项目引入：
@@ -37,10 +52,14 @@ yarn add file:../meeting@0.0.1
 ```tsx
 import { Connection } from "meeting/src";
 
-<Connection
-  size="large"
-  title="　"
-  open={display}
-  onCancel={() => setDisplay(false)}
-/>;
+const [display, setDisplay] = useState<boolean>(false);
+  const handleClose = () => {
+    setDisplay(false);
+  };
+
+<Button onClick={() => setDisplay(true)} type="primary">
+  Call
+</Button>
+
+<Connection size="large" open={display} onCancel={() => setDisplay(false)} />;
 ```
